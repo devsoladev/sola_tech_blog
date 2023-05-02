@@ -1,0 +1,59 @@
+---
+title: 알쏭달쏭 git 명령어
+date: 2023-04-24
+description: 비슷한듯 비슷하지 않은 비슷한 것 같은 git 명령어들을 정리해보자.
+---
+
+git에는 비슷한 개념이지만 자세히 살펴보면 다르게 동작하는 명령어들이 있다. 그 중 대표적으로 헷갈리는 세 가지 케이스에 대해서 알아보도록 하겠다.
+
+<br>
+
+## `git add \*` vs `git add .`
+
+- git add \*
+
+  현재 디렉토리와 그 하위 디렉토리의 변경 내역을 staging area에 올린다. 이 때 .gitignore 파일에 있는 파일까지 포함된다.
+
+- git add .
+
+  현재 디렉토리와 그 하위 디렉토리의 변경 내역을 staging area에 올린다. 이 때 .gitignore 파일에 있는 파일은 제외한다.
+
+<br>
+<br>
+
+## `git reset` vs `git revert`
+
+- git reset
+
+  특정 커밋까지 상태를 되돌리고 해당 이력을 삭제한다. 브랜치가 과거의 커밋을 참조하도록 이동시키는 방식으로 변경 사항을 되돌린다.
+
+  e.g) 작업한 내용이 불필요해지는 경우
+
+- git revert
+
+  특정 커밋까지 상태를 되돌리고 해당 이력을 유지한다. 되돌리고자 한 커밋 아래에 변경 내역이 기록된 커밋이 생긴다. 되돌린 변경 사항을 다른 작업자들과 공유할 때 사용한다.
+
+  e.g) 특정 버전을 배포했는데 문제가 생겨서 롤백하는 경우
+
+<br>
+<br>
+
+## `git merge` vs `git rebase`
+
+- git merge
+
+  git merge로 병합 시 두 개의 부모를 참조하는 커밋이 생긴다. 따라서 모든 이력을 남기고 싶은 경우 merge를 사용하면 된다.
+
+- git rebase
+
+  git rebase로 병합 시 커밋들을 모아서 복사한 다음 리베이스한 지점에 옮겨 놓는다. 커밋들의 흐름을 깔끔하게 한 줄로 정리할 수 있다. 따라서 불필요한 merge 커밋을 남기고 싶지 않은 경우 rebase를 사용하면 된다.
+
+<br>
+<br>
+<br>
+
+### Ref
+
+- https://subicura.com/git
+- https://violetboralee.medium.com/git-%EA%B8%B0%EB%B3%B8-4ebc1e0f4f10
+- https://www.atlassian.com/git/tutorials/merging-vs-rebasing
