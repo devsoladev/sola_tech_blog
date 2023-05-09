@@ -1,0 +1,114 @@
+---
+title: 모두를 위한 웹 - 웹 접근성
+date: 2023-05-09
+description: 우리 서비스의 웹 접근성은 몇 점일까?
+---
+
+<br />
+<br />
+
+## 웹 접근성(Web Accessibility)이란?
+
+한국웹접근성인증평가원에 따르면, 웹 접근성이란 장애인이나 고령자가 웹 사이트에서 제공하는 정보를 비장애인과 동등하게 이용할 수 있도록 보장하는 것을 의미한다. 예컨대, 시각 장애인은 스크린 리더를 사용하여 웹에 접근하기 때문에 스크린 리더가 올바른 정보를 나타낼 수 있도록 마크업을 개발해야 한다. <br />
+비단 웹 접근성은 장애 여부나 고령층에만 국한되지 않는다. 모바일, 스마트 TV 등 데스크탑이
+아닌 디바이스 사용자나 네트워크 환경이 열악한 장소의 사용자도 웹 접근성의 대상 범위에 포함된다.
+
+<br />웹 개발자는 언제나 사용자를 최우선으로 두고 서비스를 만들어야 한다. 하지만
+자신도 모르게 이 사용자를 젊은 비장애인으로 상정할 수 있다. 화려하고 멋진
+서비스를 만드는 것도 좋지만, 누구나 큰 불편함 없이 접근할 수 있는 서비스를
+만드는 것이 매우 중요하다. <br />
+따라서 효율적이고 깔끔한 코드를 작성하는 것 만큼 웹 접근성을 향상시키는 것도 개발자의
+덕목 중 하나라고 할 수 있다.
+
+<br />
+<br />
+
+## 시멘틱 마크업(Semantic HTML)
+
+시멘틱 마크업은 의미에 맞는 태그, 요소를 사용하여 HTML 문서를 작성하는 것을 의미한다.  
+인터넷 마케팅이 점차 보편화 되면서 검색 엔진 최적화(Search Engine Optimization)가 화두로 떠올랐다. 이 검색 엔진이 웹 페이지를 효과적으로 분석할 수 있게 하려면 적절한 태그를 사용하여 컨텐츠를 구성하는 시멘틱 마크업이 필요하다.
+
+<br />
+
+![Semantic Markup](/20230509/semantic_markup.jpg)
+
+<br />
+
+### 시멘틱 태그(Semantic Tag)
+
+HTML5부터 컨텐츠의 의미를 나타내는 시멘틱 태그가 추가되었다.
+
+- 시멘틱 태그의 종류
+  - article
+  - aside
+  - figcaption
+  - figure
+  - footer
+  - header
+  - main
+  - mark
+  - nav
+  - section
+  - time
+
+<br />
+
+### form 요소 - label
+
+label은 form 요소의 이름과 form 요소를 명시적으로 연결시키기 위해 사용하는 태그이다. form 요소의 id 속성값과 label의 for 속성값을 동일하게 작성하면 label을 클릭했을 때 해당 form 요소를 클릭한 것처럼 동작한다.<br />
+스크린 리더를 통해 form 요소에 접근하면 연결된 label을 함께 읽어주므로 접근성 측면에서 중요한 역할을 한다.
+
+```HTML
+<form action="" method="">
+  <div class="form-input">
+    <label for="email">이메일</label>
+    <input type="email" name="email" id="email">
+  </div>
+  <div class="form-input">
+    <label for="password">비밀번호</label>
+    <input type="password" name="password" id="password">
+  </div>
+  <div class="form-button">
+    <button type="submit">제출</button>
+  </div>
+</form>
+```
+
+<br />
+<br />
+
+## 대체 텍스트(Text Alternatives)
+
+시각 장애가 있는 사용자는 스크린 리더를 통해 정보를 인식하므로 텍스트가 아닌 컨텐츠를 표현할 때는 그 의미나 용도를 알 수 있도록 대체 텍스트를 함께 제공해야 한다.
+
+### img alt 속성
+
+alt는 이미지의 대체 텍스트를 나타내는 속성이다. 이미지를 볼 수 없는 사용자를 위해 반드시 alt 속성에 이미지에 대한 설명을 작성해야 한다. QR 코드나 바코드 같은 정보는 대체 텍스트로 연결 링크를 제공한다. <br />
+다만 배경 이미지와 같은 장식 목적의 이미지는 스크린 리더에 읽히지 않도록 alt 속성을 빈 값으로 넣는 것이 낫다.
+
+```HTML
+<img src="이미지 경로" alt="대체 텍스트">
+```
+
+<br />
+
+크롬 개발자 도구의 Lighthouse를 통해 현재 접속한 웹 페이지의 접근성을 분석해볼 수 있다. 간략한 리포트이긴 하지만, 접근성 향상을 위한 팁을 얻을 수 있다. <br />
+다양한 검사 도구를 활용하여 자사 서비스의 접근성을 진단해보고 개선점을 찾아보는 것도 좋을 듯하다.
+
+<br />
+<br />
+
+![Main Page Accessibility](/20230509/studio_main_accessibility.jpg '우리 서비스 메인 페이지의 접근성은 80점이다!')
+
+<br />
+<br />
+<br />
+
+### Ref
+
+- [https://www.boostcourse.org/cs120/joinLectures/33586](https://www.boostcourse.org/cs120/joinLectures/33586)
+- [https://www.w3.org/WAI/fundamentals/accessibility-intro/ko#making](https://www.w3.org/WAI/fundamentals/accessibility-intro/ko#making)
+- [http://www.wa.or.kr/m1/sub1.asp](http://www.wa.or.kr/m1/sub1.asp)
+- [https://developer.mozilla.org/ko/docs/Learn/Accessibility](https://developer.mozilla.org/ko/docs/Learn/Accessibility)
+- [https://medium.com/codex/what-is-semantic-markup-and-why-you-should-use-it-44777543c29c](https://medium.com/codex/what-is-semantic-markup-and-why-you-should-use-it-44777543c29c)
+- [https://accessibility.naver.com/acc/guide_01](https://accessibility.naver.com/acc/guide_01)
