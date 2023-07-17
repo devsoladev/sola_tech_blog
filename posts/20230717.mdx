@@ -1,0 +1,418 @@
+---
+title: React 대탐험 - Component
+date: 2023-07-17
+description: React의 Component에 대해서 알아보자
+---
+
+## Component
+
+컴포넌트는 재사용할 수 있는 코드 조각을 의미한다. 작은 컴포넌트들을 레고처럼 조립해서 UI를 구성할 수도 있고, 복잡한 컴포넌트를 작은 단위로 분할할 수도 있다.<br />
+컴포넌트는 상위 컴포넌트가 하위 컴포넌트를 포함하는 계층 구조로 형성된다. 이러한 구조를 통해 컴포넌트 간의 데이터 및 이벤트 흐름을 관리할 수 있다.<br />
+React에서 컴포넌트는 재사용성과 모듈성을 제고하며, 좀 더 유지보수하기 용이한 코드를 작성하는데 도움을 준다.
+
+### JSX(JavaScript XML)
+
+JSX는 JavaScript를 확장한 문법으로, React에서 UI 로직을 구현할 때 사용한다.<br />
+React 컴포넌트 파일에서 XML 형태로 코드를 작성하면 Babel이 JSX를 JavaScript로 변환해준다.<br />
+JSX에서 반환하는 element의 태그는 반드시 모두 닫혀 있어야 한다. 불가피하게 감싸는 태그가 필요하다면 빈 태그인 Fragment를 사용하면 된다.
+
+```javascript
+// App Component
+
+import React from 'react';
+import Component from './Component';
+
+function App() {
+	return (
+		<>
+			<Component />
+			<Component />
+			<Component />
+		</>
+	);
+}
+```
+
+JSX는 HTML보다 JavaScript에 가깝기 때문에 React DOM은 HTML attributes 대신 camelCase로 property를 명명한다.
+
+```javascript
+// App Component
+
+import React from 'react';
+import Component from './Component';
+
+function App() {
+	// class -> className
+	return (
+		<>
+			<div className='container'></div>
+		</>
+	);
+}
+```
+
+React DOM은 JSX에 삽입된 모든 값을 렌더링 이전에 escape 처리하기 때문에 모든 항목은 렌더링 되기 전에 문자열로 변환된다.<br />
+따라서 XSS(Cross-Site-Scripting) 공격을 방지할 수 있다.
+
+```javascript
+const title = response.potentiallyMaliciousInput;
+// It's safe
+const element = <h1>{title}</h1>;
+```
+
+### Component Composition
+
+합성 컴포넌트 패턴이란 하나의 컴포넌트를 여러 조각으로 분리한 다음, 분리된 각 컴포넌트를 사용하는 쪽에서 조합하는 것을 의미한다.<br />
+요구사항이 복잡해지고 다양해지는 상황에서 합성 컴포넌트 패턴를 잘 활용하면 좀 더 유연하고 재사용성이 뛰어난 코드를 작성할 수 있다.
+
+내부에 어떤 element가 들어올지 예상하기 어려운 컴포넌트의 경우, props.children을 사용하면 상위 컴포넌트에서 작성한 element를 그대로 출력할 수 있다.
+
+```javascript
+function FancyBorder(props) {
+	return (
+		<div className={'FancyBorder FancyBorder-' + props.color}>
+			{props.children}
+		</div>
+	);
+}
+
+function WelcomeDialog() {
+	return (
+		<FancyBorder color='blue'>
+			<h1 className='Dialog-title'>Welcome</h1>
+			<p className='Dialog-message'>Thank you for visiting our site!</p>
+		</FancyBorder>
+	);
+}
+```
+
+한 컴포넌트에 여러 개의 컴포넌트를 합성해야 하는 경우, 컴포넌트를 props처럼 전달할 수도 있다.
+
+```javascript
+function SplitPane(props) {
+	return (
+		<div className='SplitPane'>
+			<div className='SplitPane-left'>{props.left}</div>
+			<div className='SplitPane-right'>{props.right}</div>
+		</div>
+	);
+}
+
+function App() {
+	return <SplitPane left={<Contacts />} right={<Chat />} />;
+}
+```
+
+#### Specialization
+
+Dialog처럼 어떤 컴포넌트의 특수한 경우를 고려해야 하는 컴포넌트를 구현해야 하는 경우, 컴포넌트 합성을 활용할 수 있다.
+
+```javascript
+function Dialog(props) {
+	return (
+		<FancyBorder color='blue'>
+			<h1 className='Dialog-title'>{props.title}</h1>
+			<p className='Dialog-message'>{props.message}</p>
+		</FancyBorder>
+	);
+}
+
+function WelcomeDialog() {
+	return <Dialog title='Welcome' message='Thank you for visiting our site!' />;
+}
+```
+
+### Class Based Component
+
+함수형 컴포넌트가 도입되기 전까지 컴포넌트는 ES6의 class 문법으로 구현되었다.<br />
+이제 클래스형 컴포넌트는 거의 사용되지 않지만, 혹여 클래스형 컴포넌트로 작성된 애플리케이션을 유지보수하게 될 수도 있기 때문에 기본적인 내용은 알아두는 것이 좋다.
+
+간단한 클래스형 컴포넌트를 구현하는 방법은 다음과 같다.
+
+1. React.Component를 상속 받아 클래스를 생성한다.
+2. render 메서드를 추가하고 JSX를 반환한다.
+3. this.props로 접근하여 props를 조회한다.
+   3-1. defaultProps를 설정하는 경우, static 키워드를 사용하여 클래스 내부에 선언한다.
+
+```javascript
+import React, { Component } from 'react';
+
+class Hello extends Component {
+	static defaultProps = {
+		name: 'no name',
+	};
+	render() {
+		const { color, name, isSpecial } = this.props;
+		return (
+			<div style={{ color }}>
+				{isSpecial && <b>*</b>}
+				Hello, {name}
+			</div>
+		);
+	}
+}
+
+export default Hello;
+```
+
+커스텀 메서드를 추가하고 싶으면, 클래스 내부에 종속된 함수를 작성하면 된다.
+
+```javascript
+import React, { Component } from 'react';
+
+class Counter extends Component {
+	handleIncrease() {
+		// custom method
+		console.log('increase');
+	}
+
+	handleDecrease() {
+		// custom method
+		console.log('decrease');
+	}
+
+	render() {
+		return (
+			<div>
+				<h1>0</h1>
+				<button onClick={this.handleIncrease}>+</button>
+				<button onClick={this.handleDecrease}>-</button>
+			</div>
+		);
+	}
+}
+
+export default Counter;
+```
+
+하지만 위의 클래스 컴포넌트에서 this는 컴포넌트 인스턴스를 참조하지 않고 있다. 커스텀 메서드를 이벤트로 등록하는 과정에서 메서드와 컴포넌트 인스턴스의 관계가 끊기기 때문이다. 이를 해결하기 위한 방법으로는 크게 세 가지가 있다.
+
+i) 클래스의 생성자 메서드인 constructor에서 this를 bind하는 방법
+
+```javascript
+import React, { Component } from 'react';
+
+class Counter extends Component {
+	constructor(props) {
+		super(props);
+		this.handleIncrease = this.handleIncrease.bind(this); // this binding
+		this.handleDecrease = this.handleDecrease.bind(this); // this binding
+	}
+
+	handleIncrease() {
+		console.log('increase');
+		console.log(this); // Counter Component Instance
+	}
+
+	handleDecrease() {
+		console.log('decrease');
+	}
+
+	render() {
+		return (
+			<div>
+				<h1>0</h1>
+				<button onClick={this.handleIncrease}>+</button>
+				<button onClick={this.handleDecrease}>-</button>
+			</div>
+		);
+	}
+}
+
+export default Counter;
+```
+
+ii) 커스텀 메서드를 화살표 함수로 작성하는 방법(class-properties)
+
+```javascript
+import React, { Component } from 'react';
+
+class Counter extends Component {
+	handleIncrease = () => {
+		// arrow function
+		console.log('increase');
+	};
+
+	handleDecrease = () => {
+		// arrow function
+		console.log('decrease');
+	};
+
+	render() {
+		return (
+			<div>
+				<h1>0</h1>
+				<button onClick={this.handleIncrease}>+</button>
+				<button onClick={this.handleDecrease}>-</button>
+			</div>
+		);
+	}
+}
+
+export default Counter;
+```
+
+iii) onClick 이벤트에서 새로운 함수를 만들어 전달하는 방법(권장 X)
+
+```javascript
+import React, { Component } from 'react';
+
+class Counter extends Component {
+	handleIncrease = () => {
+		console.log('increase');
+	};
+
+	handleDecrease = () => {
+		console.log('decrease');
+	};
+
+	render() {
+		return (
+			<div>
+				<h1>0</h1>
+				<button onClick={() => this.handleIncrease()}>+</button>
+				<button onClick={() => this.handleDecrease()}>-</button>
+			</div>
+		);
+	}
+}
+
+export default Counter;
+```
+
+클래스 컴포넌트에서는 constructor 메서드 내에 state를 선언하여 상태를 관리한다. state는 반드시 객체여야 한다.
+
+```javascript
+import React, { Component } from 'react';
+
+class Counter extends Component {
+	constructor(props) {
+		super(props);
+		// state
+		this.state = {
+			counter: 0,
+		};
+	}
+
+	// ...
+}
+
+export default Counter;
+```
+
+상태를 업데이트할 때는 setState 함수를 사용한다.
+
+```javascript
+import React, { Component } from 'react';
+
+class Counter extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			counter: 0,
+		};
+	}
+
+	handleIncrease = () => {
+		// setState
+		this.setState({
+			counter: this.state.counter + 1,
+		});
+	};
+
+	handleDecrease = () => {
+		// setState
+		this.setState({
+			counter: this.state.counter - 1,
+		});
+	};
+
+	// ...
+}
+
+export default Counter;
+```
+
+#### Component Life Cycle
+
+컴포넌트는 하나의 생명체와 같이 탄생부터 소멸에 이르는 일련의 생명주기를 거친다. 그리고 클래스 컴포넌트에는 각 단계에 해당하는 '생명주기 메서드'가 존재한다.<br />
+생명주기 메서드는 컴포넌트가 브라우저에 렌더링될 때(mount), 상태가 업데이트될 때(update), 브라우저에서 사라질 때(unmount) 각각의 주기에 맞게 호출된다.
+
+![Class Component Lifecycle Method](/20230717/lifecyclemethod.jpg)
+
+1. mount
+   컴포넌트가 마운트될 때 발생하는 생명주기 메서드는 다음과 같다.
+
+   - constructor : 컴포넌트 생성자 메서드
+   - getDerivedStateFromProps : props를 state에 넣을 때 사용하는 메서드
+   - render : 컴포넌트 렌더링 메서드
+   - componentDidMount : 컴포넌트 최초 렌더링 후 호출되는 메서드
+
+2. update
+   컴포넌트가 업데이트될 때 발생하는 생명주기 메서드는 다음과 같다.
+
+   - getDerivedStateFromProps : 컴포넌트의 props나 state가 변경될 때 호출되는 메서드
+   - shouldComponentUpdate : 컴포넌트를 리렌더링할 지 결정하는 메서드
+   - render : 컴포넌트 렌더링 메서드
+   - getSnapshotBeforeUpdate : 가장 마지막으로 렌더링된 결과가 DOM에 반영되기 전에 호출되는 메서드
+   - componentDidUpdate : 컴포넌트 리렌더링을 마치고 화면이 모두 업데이트된 이후 호출되는 메서드
+
+3. unmount
+   컴포넌트가 언마운트될 때 발생하는 생명주기 메서드는 다음과 같다.
+   - componentWillUnmount : 컴포넌트가 소멸되기 직전에 호출되는 메서드
+
+### Functional Component
+
+React 16.8 버전 이후로 Hook이 도입되면서 함수형 컴포넌트에서도 state와 생명주기 메서드를 사용할 수 있게 되었다. 따라서 근래 대부분의 React 기반 프로젝트는 함수형 컴포넌트로 개발되고 있다.
+
+<br />
+아래 코드는 useState Hook을 사용하여 상태를 관리하는 간단한 함수형 컴포넌트이다.
+
+```javascript
+import React, { useState } from 'react';
+
+function Counter() {
+	const [number, setNumber] = useState(0);
+
+	const onIncrease = () => {
+		setNumber((prevNumber) => prevNumber + 1);
+	};
+
+	const onDecrease = () => {
+		setNumber((prevNumber) => prevNumber - 1);
+	};
+
+	return (
+		<div>
+			<h1>{number}</h1>
+			<button onClick={onIncrease}>+</button>
+			<button onClick={onDecrease}>-</button>
+		</div>
+	);
+}
+
+export default Counter;
+```
+
+클래스 컴포넌트와 비교했을 때, 함수형 컴포넌트는 다음과 같은 특징을 갖고 있다.
+
+1. 렌더링될 때의 값들을 유지하므로 state, props의 불변성을 지킬 수 있다.
+2. render 메서드를 사용하지 않기 때문에 컴포넌트 마운트 속도가 상대적으로 빠르다.
+3. Boilerplate 코드가 적고 화살표 함수 문법을 사용하여 가독성이 좋다.
+4. 순수 함수이기 때문에 테스트가 용이하다.
+
+### Ref
+
+- [https://react.vlpt.us/basic/04-jsx.html](https://react.vlpt.us/basic/04-jsx.html)
+- [https://react.vlpt.us/basic/24-class-component.html](https://react.vlpt.us/basic/24-class-component.html)
+- [https://react.vlpt.us/basic/25-lifecycle.html](https://react.vlpt.us/basic/25-lifecycle.html)
+- [https://ko.legacy.reactjs.org/docs/introducing-jsx.html](https://ko.legacy.reactjs.org/docs/introducing-jsx.html)
+- [https://ko.legacy.reactjs.org/docs/composition-vs-inheritance.html](https://ko.legacy.reactjs.org/docs/composition-vs-inheritance.html)
+- [https://ko.legacy.reactjs.org/docs/react-component.html#componentwillunmount](https://ko.legacy.reactjs.org/docs/react-component.html#componentwillunmount)
+- [https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/)
+- [https://react.dev/reference/react/Component](https://react.dev/reference/react/Component)
+- [https://medium.com/little-big-programming/react%EC%9D%98-%EA%B8%B0%EB%B3%B8-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90-92c923011818](https://medium.com/little-big-programming/react%EC%9D%98-%EA%B8%B0%EB%B3%B8-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90-92c923011818)
+- [https://fe-developers.kakaoent.com/2022/220731-composition-component/](https://fe-developers.kakaoent.com/2022/220731-composition-component/)
+- [https://fe-developers.kakaoent.com/2022/221020-component-abstraction/](https://fe-developers.kakaoent.com/2022/221020-component-abstraction/)
+- [https://overreacted.io/ko/how-are-function-components-different-from-classes/](https://overreacted.io/ko/how-are-function-components-different-from-classes/)
+- [https://velog.io/@dianaleee\_/%EC%99%9C-%ED%95%A8%EC%88%98%ED%98%95-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8Functional-Component%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80](https://velog.io/@dianaleee_/%EC%99%9C-%ED%95%A8%EC%88%98%ED%98%95-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8Functional-Component%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94%EA%B0%80)
