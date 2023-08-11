@@ -1,0 +1,60 @@
+---
+title: React 상태 관리 3대장 - Redux, Recoil, React Query
+date: 2023-08-11
+description: React의 대표적인 상태 관리 라이브러리인 Redux, Recoil, React Query를 비교해보자
+---
+
+바야흐로 춘추전국시대라고 할 수 있을 만큼 다양한 React 상태 관리 라이브러리들이 생겨나고 있다. 각각의 라이브러리들은 'React에서 전역으로 공유되는 상태를 어떻게 관리할 것인가'라는 공통 문제에 대해 서로 다른 접근 방식을 취하고 있다. 따라서 개발자는 애플리케이션의 요구 사항에 따라 적절한 라이브러리를 선별하여 사용할 줄 알아야 한다. <br />
+Mobx, Jotai, Zustand, Valtio, Remix 등 정말 많은 라이브러리들이 존재하고 있고 지금도 새로운 라이브러리들이 등장하고 있지만, 여기서는 대표적으로 Redux, Recoil, React Query에 대해서 간략히 알아보도록 하겠다.
+
+<br />
+<br />
+
+## Redux
+
+MVC 패턴의 양방향 데이터 흐름으로 인한 단점을 해결하기 위해 개발된 'Flux 패턴'과 'Reducer'를 결합한 전역 상태 관리 솔루션이다.
+
+- 특징
+  - 단일 저장소 사용
+  - 미들웨어 사용
+  - 시간 여행 디버깅
+  - 상태는 읽기 전용, 리듀서는 순수 함수
+
+## Recoil
+
+Facebook에서 React만을 위해 직접 개발한 상태 관리 라이브러리로 React의 깊은 부분까지 상태를 관리할 수 있다.
+
+- 특징
+  - 작은 상태 단위인 atom과 selector 사용
+  - 데이터 흐름 그래프
+  - 교차하는 애플리케이션 관찰
+  - 동시성 모드
+
+## React Query
+
+서버 상태, 캐싱, 동기화 및 업데이트를 쉽게 관리할 수 있도록 해주는 라이브러리로, 클라이언트 상태와 서버 상태를 구분한다.
+
+- 특징
+  - 비교적 간단한 코드
+  - 캐싱 가능
+  - 동일 데이터에 대한 중복 요청 제거
+  - 오래된 상태 업데이트
+  - 성능 최적화 지원
+  - 구조 공유 사용
+  - Garbage Collection
+
+<br />
+<br />
+<br />
+
+### Ref
+
+- [https://medium.com/@yujso66/%EB%B2%88%EC%97%AD-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC%EC%9D%98-%EC%83%88%EB%A1%9C%EC%9A%B4-%ED%9D%90%EB%A6%84-6e5ed0022e39](https://medium.com/@yujso66/%EB%B2%88%EC%97%AD-%EB%A6%AC%EC%95%A1%ED%8A%B8-%EC%83%81%ED%83%9C-%EA%B4%80%EB%A6%AC%EC%9D%98-%EC%83%88%EB%A1%9C%EC%9A%B4-%ED%9D%90%EB%A6%84-6e5ed0022e39)
+- [https://www.stevy.dev/react-state-management-guide/](https://www.stevy.dev/react-state-management-guide/)
+- [https://ko.redux.js.org/introduction/getting-started](https://ko.redux.js.org/introduction/getting-started)
+- [https://react.vlpt.us/redux/](https://react.vlpt.us/redux/)
+- [https://recoiljs.org/ko/docs/introduction/motivation/](https://recoiljs.org/ko/docs/introduction/motivation/)
+- [https://ui.toast.com/weekly-pick/ko_20200616](https://ui.toast.com/weekly-pick/ko_20200616)
+- [https://tanstack.com/query/v3/docs/react/overview](https://tanstack.com/query/v3/docs/react/overview)
+- [https://www.nextree.io/react-query/](https://www.nextree.io/react-query/)
+- [https://github.com/ssi02014/react-query-tutorial#%EA%B0%9C%EC%9A%94](https://github.com/ssi02014/react-query-tutorial#%EA%B0%9C%EC%9A%94)
